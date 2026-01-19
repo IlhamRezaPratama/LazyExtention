@@ -106,7 +106,6 @@ app.post('/api/chat', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'Claude': callClaude,
       'Hugging Face': callHuggingFace
     };
 
