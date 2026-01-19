@@ -215,18 +215,17 @@ async function callAIAPI(aiName, userQuestion, container) {
 	const loadingBubble = addLoadingIndicator(container);
 
 	try {
-		const response = await fetch('http://localhost:3000/api/chat', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				ai: aiName,
-				prompt: userQuestion
-			})
-		});
-
-		const data = await response.json();
+    const response = await fetch('https://lazy-extention.vercel.app/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': 'oiXjLwPvFkECVUJZObuGg3zfmIBhtcRs'
+      },
+      body: JSON.stringify({
+        ai: aiName,
+        prompt: userQuestion
+      })
+    });
 		loadingBubble.remove();
 
 		if (data.response) {

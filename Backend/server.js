@@ -9,6 +9,15 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
+// API Key Authentication Middleware
+const authenticateAPIKey = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  if (!apiKey || apiKey !== process.env.API_SECRET) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid API key' });
+  }
+  next();
+};
+
 // API Keys
 const API_KEYS = {
   GEMINI: process.env.GEMINI_API_KEY,
@@ -86,7 +95,7 @@ async function callHuggingFace(prompt) {
 }
 
 // Single AI chat endpoint
-app.post('/api/chat', async (req, res) => {
+app.post('/api/chat', authenticateAPIKey, async (req, res) => {
   try {
     const { ai, prompt } = req.body;
 
@@ -118,7 +127,7 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-app.post('/api/compare', async (req, res) => {
+app.post('/api/compare', authenticateAPIKey, async (req, res) => {
   try {
     const { ai1, ai2, prompt } = req.body;
 
