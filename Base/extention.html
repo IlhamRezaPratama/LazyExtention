@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Model Overlay 1 -->
+  <div class="modal_overlay" id="modalOverlay">
+    <div class="card">
+      <!--Item 1-->
+      <button class="menu_item" id="menu_item">
+        <img src="picture/clip.svg" class="menu_icon">
+        <span class="menu_text">Tambah File & Foto</span>
+      </button>
+      
+      <!--Item 2-->
+      <button class="menu_item" id="limitBtn">
+        <img src="picture/Chart.svg" class="menu_icon">
+        <span class="menu_text">Limit</span>
+      </button>
+
+      <!--item 3-->
+      <button class="menu_item" id="menu_item2">
+        <img src="picture/wand.svg" class="menu_icon">
+        <span class="menu_text">AI</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Notification  -->
+  <div class="notification_card" id="notificationMax">
+    <div class="notif_img"></div>
+    <div class="notif_textBox">
+      <div class="notif_textContent">
+        <p class="notif_h1">Peringatan</p>
+        <span class="notif_span">Maksimal Cuman 2 AI!!!</span>
+      </div>
+      <p class="notif_p">Bayar Kalau Mau</p>
+    </div>
+  </div>
+
+  <div class="notification_card" id="notificationSelect">
+    <div class="notif_img"></div>
+    <div class="notif_textBox">
+      <div class="notif_textContent">
+        <p class="notif_h1">Info</p>
+        <span class="notif_span">Pilih 2 AI dulu!</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="notification_card" id="notificationLimit">
+    <div class="notif_img"></div>
+    <div class="notif_textBox">
+      <div class="notif_textContent">
+        <p class="notif_h1">Limit Habis</p>
+        <span class="notif_span">Naikkan limit di menu Lainnya</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pilihan di overlay 2 -->
+  <div class="modal_overlay2" id="modalOverlay2">
+    <div class="card2">
+      <!--Item 1-->
+      <div class="checkbox_container">
+        <input type="checkbox" class="ai-checkbox" id="cbx1" style="display: none;">
+        <label for="cbx1" class="checkbox_label">
+          <img src="picture/clip.svg" class="menu_icon">
+          <span class="menu_text">Gemini</span>
+          <svg class="check_icon" width="18px" height="18px" viewBox="0 0 18 18">
+              <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
+              <polyline points="1 9 7 14 15 4"></polyline>
+          </svg>
+        </label>
+      </div>
+      <!--Item 2-->
+      <div class="checkbox_container">
+        <input type="checkbox" class="ai-checkbox" id="cbx2" style="display: none;">
+        <label for="cbx2" class="checkbox_label">
+          <img src="picture/clip.svg" class="menu_icon">
+          <span class="menu_text">Groq</span>
+          <svg class="check_icon" width="18px" height="18px" viewBox="0 0 18 18">
+              <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
+              <polyline points="1 9 7 14 15 4"></polyline>
+          </svg>
+        </label>
+      </div>
+      <!--Item 3-->
+      <div class="checkbox_container">
+        <input type="checkbox" class="ai-checkbox" id="cbx3" style="display: none;">
+        <label for="cbx3" class="checkbox_label">
+          <img src="picture/clip.svg" class="menu_icon">
+          <span class="menu_text">Hugging Face</span>
+          <svg class="check_icon" width="18px" height="18px" viewBox="0 0 18 18">
+              <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
+              <polyline points="1 9 7 14 15 4"></polyline>
+          </svg>
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Overlay 3 -->
+  <div class="modal_overlay3" id="modalOverlay3">
+    <div class="card3">
+      <div class="limit_container">
+        <div class="limit_skill_box">
+          <span class="limit_title">Gemini</span>
+          <div class="limit_skill_bar">
+            <span id="limitFillGemini" class="limit_skill_per">
+            </span>
+            <span id="limitTooltipGemini" class="limit_tooltip">100%</span>
+          </div>
+        </div>
+
+        <div class="limit_skill_box">
+          <span class="limit_title">Groq</span>
+          <div class="limit_skill_bar">
+            <span id="limitFillGroq" class="limit_skill_per">
+            </span>
+            <span id="limitTooltipGroq" class="limit_tooltip">100%</span>
+          </div>
+        </div>
+
+        <div class="limit_skill_box">
+          <span class="limit_title">Hugging Face</span>
+          <div class="limit_skill_bar">
+            <span id="limitFillHf" class="limit_skill_per">
+            </span>
+            <span id="limitTooltipHf" class="limit_tooltip">100%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="header_section">
+    <img src="picture/Logohitam.svg" alt="Logo" class="header_logo">
+    <h1>Lazy Mahasigma</h1>
+  </div>
+
+  <!-- Chat Compare -->
+  <div class="chat_comparison_container" id="chatComparison">
+    <div class="chat_sections" id="chatSections"></div>
+  </div>
+  
+  <div class="input_section">
+    <div class="container">
+      <div class="input_wrapper">
+        <div class="input_container">
+          <button class="btn btn_plus" id="plusBtn">
+            <svg class="icon icon_gray" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </button>
+
+          <div class="textarea_container">
+            <div id="filePreview" class="file_preview"></div>
+            
+            <textarea 
+              id="textArea" 
+              placeholder="CIHUYYYYYYYYYYYYYYYYY!!!!!!!!!!!!!"
+              rows="1"
+            ></textarea>
+          </div>
+
+          <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" multiple style="display: none;">
+
+          <div class="right_buttons">
+            <button class="btn btn_submit" id="submitBtn">
+              <svg class="icon icon_dark" viewBox="0 0 24 24">
+                <line x1="12" y1="19" x2="12" y2="5"></line>
+                <polyline points="5 12 12 5 19 12"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>

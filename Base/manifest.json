@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Lazy Mahasigma",
+  "version": "1.0.0",
+  "description": "AI compare popup extension",
+  "action": {
+    "default_popup": "extention.html",
+    "default_title": "Lazy Mahasigma"
+  },
+  "icons": {
+    "16": "picture/Logohitam.svg",
+    "48": "picture/Logohitam.svg",
+    "128": "picture/Logohitam.svg"
+  },
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "http://127.0.0.1:3000/*"
+  ]
+}
