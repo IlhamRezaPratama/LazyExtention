@@ -22,14 +22,15 @@ const authenticateAPIKey = (req, res, next) => {
 const API_KEYS = {
   GEMINI: process.env.GEMINI_API_KEY,
   GROQ: process.env.GROQ_API_KEY,
-  HUGGINGFACE: process.env.HUGGINGFACE_API_KEY
+  HUGGINGFACE: process.env.HUGGINGFACE_API_KEY,
+  DEEPSEEK: process.env.DEEPSEEK_API_KEY
 };
 
 // Endpoint untuk Gemini
 async function callGemini(prompt) {
   try {
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEYS.GEMINI}`,
       {
         contents: [{
           parts: [{ text: prompt }]
@@ -38,8 +39,8 @@ async function callGemini(prompt) {
     );
     return response.data.candidates[0].content.parts[0].text;
   } catch (error) {
-    console.error('Gemini Error:', error.message);
-    return `Error: ${error.message}`;
+    console.error('Gemini Error:', error.response?.data || error.message);
+    return `Error: ${error.response?.data?.error?.message || error.message}`;
   }
 }
 
@@ -73,12 +74,13 @@ async function callGroq(prompt) {
 async function callHuggingFace(prompt) {
   try {
     const response = await axios.post(
-      'https://api-inference.huggingface.co/models/mistralai/Mixtral-8x7B-Instruct-v0.1',
+      'https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct',
       {
         inputs: prompt,
         parameters: {
           max_new_tokens: 500,
-          temperature: 0.7
+          temperature: 0.7,
+          return_full_text: false
         }
       },
       {
@@ -90,8 +92,33 @@ async function callHuggingFace(prompt) {
     );
     return response.data[0].generated_text;
   } catch (error) {
-    console.error('Hugging Face Error:', error.message);
-    return `Error: ${error.message}`;
+    console.error('Hugging Face Error:', error.response?.data || error.message);
+    return `Error: ${error.response?.data?.error || error.message}`;
+  }
+}
+
+// Endpoint untuk DeepSeek
+async function callDeepSeek(prompt) {
+  try {
+    const response = await axios.post(
+      'https://api.deepseek.com/v1/chat/completions',
+      {
+        model: 'deepseek-chat',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7,
+        max_tokens: 1024
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${API_KEYS.DEEPSEEK}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+    return response.data.choices[0].message.content;
+  } catch (error) {
+    console.error('DeepSeek Error:', error.response?.data || error.message);
+    return `Error: ${error.response?.data?.error?.message || error.message}`;
   }
 }
 
@@ -107,7 +134,8 @@ app.post('/api/chat', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'Hugging Face': callHuggingFace
+      'Hugging Face': callHuggingFace,
+      'DeepSeek': callDeepSeek
     };
 
     if (!aiMap[ai]) {
@@ -138,7 +166,8 @@ app.post('/api/compare', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'Hugging Face': callHuggingFace
+      'Hugging Face': callHuggingFace,
+      'DeepSeek': callDeepSeek
     };
 
     const [response1, response2] = await Promise.all([
