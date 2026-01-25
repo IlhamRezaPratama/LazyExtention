@@ -30,7 +30,7 @@ const API_KEYS = {
 async function callGemini(prompt) {
   try {
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEYS.GEMINI}`,
+      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEYS.GEMINI}`,
       {
         contents: [{
           parts: [{ text: prompt }]
@@ -74,7 +74,7 @@ async function callGroq(prompt) {
 async function callHuggingFace(prompt) {
   try {
     const response = await axios.post(
-      'https://api-inference.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct',
+      'https://router.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct',
       {
         inputs: prompt,
         parameters: {
