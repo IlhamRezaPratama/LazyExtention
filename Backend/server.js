@@ -22,7 +22,7 @@ const authenticateAPIKey = (req, res, next) => {
 const API_KEYS = {
   GEMINI: process.env.GEMINI_API_KEY,
   GROQ: process.env.GROQ_API_KEY,
-  OPENAI: process.env.OPENAI_API_KEY,
+  OPENROUTER: process.env.OPENROUTER_AI,
   DEEPSEEK: process.env.DEEPSEEK_API_KEY
 };
 
@@ -70,27 +70,27 @@ async function callGroq(prompt) {
 }
 
 
-// Endpoint untuk OpenAI
-async function callOpenAI(prompt) {
+// Endpoint untuk OpenRouter
+async function callOpenRouter(prompt) {
   try {
     const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
+      'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'gpt-4o-mini',
+        model: 'meta-llama/llama-3.1-8b-instruct:free',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 1024
       },
       {
         headers: {
-          'Authorization': `Bearer ${API_KEYS.OPENAI}`,
+          'Authorization': `Bearer ${API_KEYS.OPENROUTER}`,
           'Content-Type': 'application/json'
         }
       }
     );
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.error('OpenAI Error:', error.response?.data || error.message);
+    console.error('OpenRouter Error:', error.response?.data || error.message);
     return `Error: ${error.response?.data?.error?.message || error.message}`;
   }
 }
@@ -132,7 +132,7 @@ app.post('/api/chat', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'OpenAI': callOpenAI,
+      'OpenAI': callOpenRouter,
       'DeepSeek': callDeepSeek
     };
 
@@ -164,7 +164,7 @@ app.post('/api/compare', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'OpenAI': callOpenAI,
+      'OpenAI': callOpenRouter,
       'DeepSeek': callDeepSeek
     };
 
