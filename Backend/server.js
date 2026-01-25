@@ -74,7 +74,7 @@ async function callGroq(prompt) {
 async function callHuggingFace(prompt) {
   try {
     const response = await axios.post(
-      'https://router.huggingface.co/models/meta-llama/Llama-3.2-3B-Instruct',
+      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3',
       {
         inputs: prompt,
         parameters: {
@@ -90,7 +90,14 @@ async function callHuggingFace(prompt) {
         }
       }
     );
-    return response.data[0].generated_text;
+    
+    if (Array.isArray(response.data) && response.data[0]?.generated_text) {
+      return response.data[0].generated_text;
+    } else if (response.data?.generated_text) {
+      return response.data.generated_text;
+    } else {
+      return 'Error: Unexpected response format';
+    }
   } catch (error) {
     console.error('Hugging Face Error:', error.response?.data || error.message);
     return `Error: ${error.response?.data?.error || error.message}`;
