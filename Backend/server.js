@@ -84,6 +84,8 @@ async function callOpenRouter(prompt) {
       {
         headers: {
           'Authorization': `Bearer ${API_KEYS.OPENROUTER}`,
+          'HTTP-Referer': 'https://lazy-extention.vercel.app',
+          'X-Title': 'Lazy Extension',
           'Content-Type': 'application/json'
         }
       }
