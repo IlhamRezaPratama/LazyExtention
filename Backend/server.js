@@ -74,14 +74,9 @@ async function callGroq(prompt) {
 async function callHuggingFace(prompt) {
   try {
     const response = await axios.post(
-      'https://router.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct',
+      'https://api-inference.huggingface.co/models/google/flan-t5-base',
       {
-        inputs: prompt,
-        parameters: {
-          max_new_tokens: 500,
-          temperature: 0.7,
-          return_full_text: false
-        }
+        inputs: prompt
       },
       {
         headers: {
