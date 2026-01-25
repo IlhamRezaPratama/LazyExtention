@@ -74,7 +74,7 @@ async function callGroq(prompt) {
 async function callHuggingFace(prompt) {
   try {
     const response = await axios.post(
-      'https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.3',
+      'https://api-inference.huggingface.co/models/microsoft/Phi-3-mini-4k-instruct',
       {
         inputs: prompt,
         parameters: {
