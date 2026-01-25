@@ -12,20 +12,20 @@ const modalOverlay3 = document.getElementById('modalOverlay3');
 const limitFillEls = {
   Gemini: document.getElementById('limitFillGemini'),
   Groq: document.getElementById('limitFillGroq'),
-  'Hugging Face': document.getElementById('limitFillHf')
+  'OpenAI': document.getElementById('limitFillHf')
 };
 
 const limitTooltipEls = {
   Gemini: document.getElementById('limitTooltipGemini'),
   Groq: document.getElementById('limitTooltipGroq'),
-  'Hugging Face': document.getElementById('limitTooltipHf')
+  'OpenAI': document.getElementById('limitTooltipHf')
 };
 
 let selectedAIs = [];
 const limits = {
   Gemini: { total: 10, remaining: 10 },
   Groq: { total: 10, remaining: 10 },
-  'Hugging Face': { total: 10, remaining: 10 }
+  'OpenAI': { total: 10, remaining: 10 }
 };
 
 function updateLimitDisplay(ai) {
@@ -335,7 +335,7 @@ document.getElementById('modalOverlay2').addEventListener('click', function(e) {
 });
 
 const aiCheckboxes = document.querySelectorAll('.ai-checkbox');
-const aiNames = ['Gemini', 'Groq', 'Hugging Face'];
+const aiNames = ['Gemini', 'Groq', 'OpenAI'];
 
 aiCheckboxes.forEach((checkbox) => {
 	checkbox.addEventListener('change', function() {

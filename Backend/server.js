@@ -22,7 +22,7 @@ const authenticateAPIKey = (req, res, next) => {
 const API_KEYS = {
   GEMINI: process.env.GEMINI_API_KEY,
   GROQ: process.env.GROQ_API_KEY,
-  HUGGINGFACE: process.env.HUGGINGFACE_API_KEY,
+  OPENAI: process.env.OPENAI_API_KEY,
   DEEPSEEK: process.env.DEEPSEEK_API_KEY
 };
 
@@ -70,32 +70,28 @@ async function callGroq(prompt) {
 }
 
 
-// Endpoint untuk Hugging Face
-async function callHuggingFace(prompt) {
+// Endpoint untuk OpenAI
+async function callOpenAI(prompt) {
   try {
     const response = await axios.post(
-      'https://api-inference.huggingface.co/models/google/flan-t5-base',
+      'https://api.openai.com/v1/chat/completions',
       {
-        inputs: prompt
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7,
+        max_tokens: 1024
       },
       {
         headers: {
-          'Authorization': `Bearer ${API_KEYS.HUGGINGFACE}`,
+          'Authorization': `Bearer ${API_KEYS.OPENAI}`,
           'Content-Type': 'application/json'
         }
       }
     );
-    
-    if (Array.isArray(response.data) && response.data[0]?.generated_text) {
-      return response.data[0].generated_text;
-    } else if (response.data?.generated_text) {
-      return response.data.generated_text;
-    } else {
-      return 'Error: Unexpected response format';
-    }
+    return response.data.choices[0].message.content;
   } catch (error) {
-    console.error('Hugging Face Error:', error.response?.data || error.message);
-    return `Error: ${error.response?.data?.error || error.message}`;
+    console.error('OpenAI Error:', error.response?.data || error.message);
+    return `Error: ${error.response?.data?.error?.message || error.message}`;
   }
 }
 
@@ -136,7 +132,7 @@ app.post('/api/chat', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'Hugging Face': callHuggingFace,
+      'OpenAI': callOpenAI,
       'DeepSeek': callDeepSeek
     };
 
@@ -168,7 +164,7 @@ app.post('/api/compare', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'Hugging Face': callHuggingFace,
+      'OpenAI': callOpenAI,
       'DeepSeek': callDeepSeek
     };
 
