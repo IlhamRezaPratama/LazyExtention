@@ -132,7 +132,7 @@ app.post('/api/chat', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'OpenAI': callOpenRouter,
+      'OpenRouter': callOpenRouter,
       'DeepSeek': callDeepSeek
     };
 
@@ -164,7 +164,7 @@ app.post('/api/compare', authenticateAPIKey, async (req, res) => {
     const aiMap = {
       'Gemini': callGemini,
       'Groq': callGroq,
-      'OpenAI': callOpenRouter,
+      'OpenRouter': callOpenRouter,
       'DeepSeek': callDeepSeek
     };
 
