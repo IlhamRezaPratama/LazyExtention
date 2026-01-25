@@ -2,11 +2,11 @@
 
 Chrome Extension untuk membandingkan respons dari berbagai Large Language Model (LLM) secara simultan dalam satu interface yang intuitif.
 
-## 🎯 Tentang Program
+## Tentang Program
 
 **Lazy Mahasigma** adalah Chrome Extension yang memungkinkan pengguna untuk mendapatkan dan membandingkan respons dari multiple AI models (Google Gemini, Groq Llama, Hugging Face Llama, DeepSeek) secara bersamaan. Extension ini dirancang untuk membantu pengguna mendapatkan perspektif yang lebih luas dari berbagai AI, membandingkan kualitas jawaban, dan memilih respons terbaik untuk kebutuhan mereka.
 
-## 🏗️ Arsitektur Sistem
+## Arsitektur Sistem
 
 Program ini terdiri dari dua komponen utama yang saling terintegrasi:
 
@@ -37,7 +37,7 @@ Node.js Express server yang di-deploy sebagai serverless function di Vercel, ber
 - **Vercel Serverless** - Zero-config deployment platform
 - **Environment Variables** - Secure API key management
 
-## 🔄 Cara Kerja Program
+## Cara Kerja Program
 
 ### Flow Interaksi User
 
@@ -85,7 +85,7 @@ Node.js Express server yang di-deploy sebagai serverless function di Vercel, ber
 └─────────────────┘
 ```
 
-## 🎨 Fitur Utama
+## Fitur Utama
 
 ### 1. **Multi-AI Comparison**
 Extension dapat memanggil hingga 2 AI models secara bersamaan menggunakan `Promise.all()` untuk parallel execution, menghasilkan respons lebih cepat dibanding sequential calls.
@@ -131,7 +131,7 @@ Extension terintegrasi dengan 4 AI providers:
 - Competitive alternative ke GPT models
 - Strong performance di coding tasks
 
-## 🔐 Security Features
+## Security Features
 
 ### API Key Authentication
 Backend menggunakan custom authentication middleware yang memvalidasi setiap request:
@@ -156,7 +156,7 @@ const authenticateAPIKey = (req, res, next) => {
 - Only allows requests dari extension origin
 - Prevents unauthorized cross-origin access
 
-## 📊 State Management
+## State Management
 
 Extension menggunakan **client-side state management** untuk tracking:
 
@@ -185,7 +185,7 @@ let uploadedFiles = [];  // Array of File objects
 
 Menyimpan files yang user upload untuk dikirim bersama prompt.
 
-## 🎯 Technical Highlights
+## Technical Highlights
 
 ### Parallel API Calls
 Backend menggunakan `Promise.all()` untuk execute multiple AI requests simultaneously:
@@ -225,24 +225,8 @@ Extension dapat di-distribute melalui:
 2. **Developer Mode** - Local testing dan private deployment
 3. **Enterprise Deployment** - Corporate environments
 
-## 💡 Use Cases
 
-**1. Research & Learning**
-Mendapatkan multiple perspectives pada topik complex dengan membandingkan jawaban dari berbagai AI models.
-
-**2. Content Creation**
-Membandingkan kualitas output untuk writing tasks, brainstorming ideas dari different AI approaches.
-
-**3. Coding Assistance**
-Compare code solutions, debugging approaches, atau explanations dari multiple AI coding assistants.
-
-**4. Decision Making**
-Mendapatkan balanced view dengan melihat recommendations dari berbagai AI models sebelum membuat keputusan.
-
-**5. AI Model Evaluation**
-Testing dan comparing performance berbagai AI models untuk specific tasks atau domains.
-
-## 📦 Project Structure
+## Project Structure
 
 ```
 project_extension/
@@ -260,7 +244,7 @@ project_extension/
     └── picture/         # Icons & assets
 ```
 
-## 🔮 Future Enhancements Potential
+## Future Enhancements Potential
 
 - **Conversation History** - Save dan retrieve past comparisons
 - **Export Functionality** - Download comparison results
