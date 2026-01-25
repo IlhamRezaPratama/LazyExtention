@@ -30,7 +30,7 @@ const API_KEYS = {
 async function callGemini(prompt) {
   try {
     const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEYS.GEMINI}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEYS.GEMINI}`,
       {
         contents: [{
           parts: [{ text: prompt }]
