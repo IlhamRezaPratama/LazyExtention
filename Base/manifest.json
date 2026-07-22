@@ -1,17 +1,25 @@
 {
   "manifest_version": 3,
   "name": "Lazy Mahasigma",
-  "version": "1.0.0",
-  "description": "AI compare popup extension",
+  "version": "2.0.0",
+  "description": "Compare AI responses side-by-side — Gemini, Groq, OpenRouter, DeepSeek in one extension",
   "action": {
     "default_popup": "extention.html",
-    "default_title": "Lazy Mahasigma"
+    "default_title": "Lazy Mahasigma — AI Compare",
+    "default_icon": {
+      "16": "picture/Logo.png",
+      "48": "picture/Logo.png",
+      "128": "picture/Logo.png"
+    }
   },
   "icons": {
-    "16": "picture/Logohitam.svg",
-    "48": "picture/Logohitam.svg",
-    "128": "picture/Logohitam.svg"
+    "16": "picture/Logo.png",
+    "48": "picture/Logo.png",
+    "128": "picture/Logo.png"
   },
+  "permissions": [
+    "clipboardWrite"
+  ],
   "host_permissions": [
     "https://lazy-extention.vercel.app/*"
   ]

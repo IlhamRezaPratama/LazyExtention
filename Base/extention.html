@@ -3,41 +3,178 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Model Overlay 1 -->
-  <div class="modal_overlay" id="modalOverlay">
-    <div class="card">
-      <!--Item 1-->
-      <button class="menu_item" id="menu_item">
-        <img src="picture/clip.svg" class="menu_icon">
-        <span class="menu_text">Tambah File & Foto</span>
-      </button>
-      
-      <!--Item 2-->
-      <button class="menu_item" id="limitBtn">
-        <img src="picture/Chart.svg" class="menu_icon">
-        <span class="menu_text">Limit</span>
-      </button>
 
-      <!--item 3-->
-      <button class="menu_item" id="menu_item2">
-        <img src="picture/wand.svg" class="menu_icon">
-        <span class="menu_text">AI</span>
-      </button>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar_left">
+      <img src="picture/Logohitam.svg" alt="Logo" class="topbar_logo">
+      <span class="topbar_title">Lazy Mahasigma</span>
+    </div>
+    <button class="topbar_btn" id="limitBtn" title="Limit Penggunaan">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 20V10"></path><path d="M12 20V4"></path><path d="M6 20v-6"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Welcome Screen (shown when no chat) -->
+  <div class="welcome_screen" id="welcomeScreen">
+    <div class="welcome_content">
+      <img src="picture/Logohitam.svg" alt="Logo" class="welcome_logo">
+      <h2 class="welcome_title">Apa yang mau kamu compare?</h2>
+      <p class="welcome_sub">Pilih 2 AI, lalu ketik pertanyaan</p>
     </div>
   </div>
 
-  <!-- Notification  -->
+  <!-- Chat Area -->
+  <div class="chat_area" id="chatArea">
+    <div class="chat_sections" id="chatSections"></div>
+  </div>
+
+  <!-- AI Selection Pills with Tier Dropdown -->
+  <div class="ai_pills" id="aiPills">
+
+    <!-- GPT Pill -->
+    <div class="ai_pill_wrapper" data-ai="GPT">
+      <label class="ai_pill" data-ai="GPT">
+        <input type="checkbox" class="ai-checkbox" id="cbx1">
+        <span class="ai_pill_dot" style="background:#10A37F;"></span>
+        <span class="ai_pill_name">GPT</span>
+        <span class="ai_pill_tier_label"></span>
+        <svg class="ai_pill_chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </label>
+      <div class="tier_dropdown" id="tierDropdownGPT">
+        <button class="tier_option" data-tier="flash">
+          <span class="tier_icon">⚡</span>
+          <div class="tier_info">
+            <span class="tier_name">Flash</span>
+            <span class="tier_desc">GPT-4o Mini — Cepat</span>
+          </div>
+        </button>
+        <button class="tier_option" data-tier="medium">
+          <span class="tier_icon">🔥</span>
+          <div class="tier_info">
+            <span class="tier_name">Medium</span>
+            <span class="tier_desc">GPT-4o — Balanced</span>
+          </div>
+        </button>
+        <button class="tier_option" data-tier="high">
+          <span class="tier_icon">💎</span>
+          <div class="tier_info">
+            <span class="tier_name">High</span>
+            <span class="tier_desc">o4-mini — Reasoning</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Gemini Pill -->
+    <div class="ai_pill_wrapper" data-ai="Gemini">
+      <label class="ai_pill" data-ai="Gemini">
+        <input type="checkbox" class="ai-checkbox" id="cbx2">
+        <span class="ai_pill_dot" style="background:#4285F4;"></span>
+        <span class="ai_pill_name">Gemini</span>
+        <span class="ai_pill_tier_label"></span>
+        <svg class="ai_pill_chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </label>
+      <div class="tier_dropdown" id="tierDropdownGemini">
+        <button class="tier_option" data-tier="flash">
+          <span class="tier_icon">⚡</span>
+          <div class="tier_info">
+            <span class="tier_name">Flash</span>
+            <span class="tier_desc">Gemini 2.0 Flash — Cepat</span>
+          </div>
+        </button>
+        <button class="tier_option" data-tier="medium">
+          <span class="tier_icon">🔥</span>
+          <div class="tier_info">
+            <span class="tier_name">Medium</span>
+            <span class="tier_desc">Gemini 2.5 Flash — Thinking</span>
+          </div>
+        </button>
+        <button class="tier_option" data-tier="high">
+          <span class="tier_icon">💎</span>
+          <div class="tier_info">
+            <span class="tier_name">High</span>
+            <span class="tier_desc">Gemini 2.5 Pro — Terkuat</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Claude Pill -->
+    <div class="ai_pill_wrapper" data-ai="Claude">
+      <label class="ai_pill" data-ai="Claude">
+        <input type="checkbox" class="ai-checkbox" id="cbx3">
+        <span class="ai_pill_dot" style="background:#D97706;"></span>
+        <span class="ai_pill_name">Claude</span>
+        <span class="ai_pill_tier_label"></span>
+        <svg class="ai_pill_chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+      </label>
+      <div class="tier_dropdown" id="tierDropdownClaude">
+        <button class="tier_option" data-tier="flash">
+          <span class="tier_icon">⚡</span>
+          <div class="tier_info">
+            <span class="tier_name">Flash</span>
+            <span class="tier_desc">Claude 3.5 Haiku — Cepat</span>
+          </div>
+        </button>
+        <button class="tier_option" data-tier="medium">
+          <span class="tier_icon">🔥</span>
+          <div class="tier_info">
+            <span class="tier_name">Medium</span>
+            <span class="tier_desc">Claude Sonnet 4 — Balanced</span>
+          </div>
+        </button>
+        <button class="tier_option" data-tier="high">
+          <span class="tier_icon">💎</span>
+          <div class="tier_info">
+            <span class="tier_name">High</span>
+            <span class="tier_desc">Claude Opus 4 — Terkuat</span>
+          </div>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Input Bar -->
+  <div class="input_bar">
+    <div class="input_box">
+      <div id="filePreview" class="file_preview"></div>
+      <div class="input_row">
+        <button class="input_icon_btn" id="plusBtn" title="Tambah File">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <textarea id="textArea" placeholder="Ketik pertanyaan..." rows="1"></textarea>
+        <button class="submit_btn" id="submitBtn" title="Kirim">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" multiple style="display: none;">
+  </div>
+
+  <!-- Notifications -->
   <div class="notification_card" id="notificationMax">
     <div class="notif_img"></div>
     <div class="notif_textBox">
       <div class="notif_textContent">
-        <p class="notif_h1">Peringatan</p>
-        <span class="notif_span">Maksimal Cuman 2 AI!!!</span>
+        <p class="notif_h1">Batas Tercapai</p>
+        <span class="notif_span">Maksimal pilih 2 AI untuk compare</span>
       </div>
-      <p class="notif_p">Bayar Kalau Mau</p>
     </div>
   </div>
 
@@ -45,8 +182,8 @@
     <div class="notif_img"></div>
     <div class="notif_textBox">
       <div class="notif_textContent">
-        <p class="notif_h1">Info</p>
-        <span class="notif_span">Pilih 2 AI dulu!</span>
+        <p class="notif_h1">Pilih AI Dulu</p>
+        <span class="notif_span">Pilih 2 AI untuk mulai compare</span>
       </div>
     </div>
   </div>
@@ -56,129 +193,40 @@
     <div class="notif_textBox">
       <div class="notif_textContent">
         <p class="notif_h1">Limit Habis</p>
-        <span class="notif_span">Naikkan limit di menu Lainnya</span>
+        <span class="notif_span">Limit penggunaan sudah habis</span>
       </div>
     </div>
   </div>
 
-  <!-- Pilihan di overlay 2 -->
-  <div class="modal_overlay2" id="modalOverlay2">
-    <div class="card2">
-      <!--Item 1-->
-      <div class="checkbox_container">
-        <input type="checkbox" class="ai-checkbox" id="cbx1" style="display: none;">
-        <label for="cbx1" class="checkbox_label">
-          <img src="picture/clip.svg" class="menu_icon">
-          <span class="menu_text">Gemini</span>
-          <svg class="check_icon" width="18px" height="18px" viewBox="0 0 18 18">
-              <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
-              <polyline points="1 9 7 14 15 4"></polyline>
-          </svg>
-        </label>
+  <div class="notification_card" id="notificationCopy">
+    <div class="notif_img"></div>
+    <div class="notif_textBox">
+      <div class="notif_textContent">
+        <p class="notif_h1">Tersalin!</p>
+        <span class="notif_span">Response berhasil di-copy</span>
       </div>
-      <!--Item 2-->
-      <div class="checkbox_container">
-        <input type="checkbox" class="ai-checkbox" id="cbx2" style="display: none;">
-        <label for="cbx2" class="checkbox_label">
-          <img src="picture/clip.svg" class="menu_icon">
-          <span class="menu_text">Groq</span>
-          <svg class="check_icon" width="18px" height="18px" viewBox="0 0 18 18">
-              <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
-              <polyline points="1 9 7 14 15 4"></polyline>
-          </svg>
-        </label>
-      </div>
-      <!--Item 3-->
-      <div class="checkbox_container">
-        <input type="checkbox" class="ai-checkbox" id="cbx3" style="display: none;">
-        <label for="cbx3" class="checkbox_label">
-          <img src="picture/clip.svg" class="menu_icon">
-          <span class="menu_text">OpenRouter</span>
-          <svg class="check_icon" width="18px" height="18px" viewBox="0 0 18 18">
-              <path d="M 1 9 L 1 9 c 0 -5 3 -8 8 -8 L 9 1 C 14 1 17 5 17 9 L 17 9 c 0 4 -4 8 -8 8 L 9 17 C 5 17 1 14 1 9 L 1 9 Z"></path>
-              <polyline points="1 9 7 14 15 4"></polyline>
-          </svg>
-        </label>
-      </div>
-
     </div>
   </div>
 
-  <!-- Overlay 3 -->
-  <div class="modal_overlay3" id="modalOverlay3">
-    <div class="card3">
+  <!-- Limit Overlay -->
+  <div class="modal_overlay" id="modalOverlay3">
+    <div class="modal_card">
+      <div class="modal_header">
+        <span>Limit Penggunaan</span>
+        <button class="modal_close" id="limitClose">&times;</button>
+      </div>
       <div class="limit_container">
         <div class="limit_skill_box">
-          <span class="limit_title">Gemini</span>
-          <div class="limit_skill_bar">
-            <span id="limitFillGemini" class="limit_skill_per">
-            </span>
-            <span id="limitTooltipGemini" class="limit_tooltip">100%</span>
-          </div>
+          <div class="limit_row"><span class="limit_title" style="color:#10A37F;">GPT</span><span id="limitTooltipGPT" class="limit_tooltip">0%</span></div>
+          <div class="limit_skill_bar"><span id="limitFillGPT" class="limit_skill_per" style="background:#10A37F;"></span></div>
         </div>
-
         <div class="limit_skill_box">
-          <span class="limit_title">Groq</span>
-          <div class="limit_skill_bar">
-            <span id="limitFillGroq" class="limit_skill_per">
-            </span>
-            <span id="limitTooltipGroq" class="limit_tooltip">100%</span>
-          </div>
+          <div class="limit_row"><span class="limit_title" style="color:#4285F4;">Gemini</span><span id="limitTooltipGemini" class="limit_tooltip">0%</span></div>
+          <div class="limit_skill_bar"><span id="limitFillGemini" class="limit_skill_per" style="background:#4285F4;"></span></div>
         </div>
-
         <div class="limit_skill_box">
-          <span class="limit_title">OpenRouter</span>
-          <div class="limit_skill_bar">
-            <span id="limitFillHf" class="limit_skill_per">
-            </span>
-            <span id="limitTooltipHf" class="limit_tooltip">100%</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="header_section">
-    <img src="picture/Logohitam.svg" alt="Logo" class="header_logo">
-    <h1>Lazy Mahasigma</h1>
-  </div>
-
-  <!-- Chat Compare -->
-  <div class="chat_comparison_container" id="chatComparison">
-    <div class="chat_sections" id="chatSections"></div>
-  </div>
-  
-  <div class="input_section">
-    <div class="container">
-      <div class="input_wrapper">
-        <div class="input_container">
-          <button class="btn btn_plus" id="plusBtn">
-            <svg class="icon icon_gray" viewBox="0 0 24 24">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-          </button>
-
-          <div class="textarea_container">
-            <div id="filePreview" class="file_preview"></div>
-            
-            <textarea 
-              id="textArea" 
-              placeholder="CIHUYYYYYYYYYYYYYYYYY!!!!!!!!!!!!!"
-              rows="1"
-            ></textarea>
-          </div>
-
-          <input type="file" id="fileInput" accept="image/*,.pdf,.doc,.docx,.txt" multiple style="display: none;">
-
-          <div class="right_buttons">
-            <button class="btn btn_submit" id="submitBtn">
-              <svg class="icon icon_dark" viewBox="0 0 24 24">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
-              </svg>
-            </button>
-          </div>
+          <div class="limit_row"><span class="limit_title" style="color:#D97706;">Claude</span><span id="limitTooltipClaude" class="limit_tooltip">0%</span></div>
+          <div class="limit_skill_bar"><span id="limitFillClaude" class="limit_skill_per" style="background:#D97706;"></span></div>
         </div>
       </div>
     </div>

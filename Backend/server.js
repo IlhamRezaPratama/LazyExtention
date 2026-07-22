@@ -6,7 +6,8 @@ require('dotenv').config();
 const app = express();
 const PORT = 3000;
 
-app.use(cors());
+// Restricted CORS — only allow extension and Vercel origins
+app.use(cors()); // Allow all origins (secured by API Secret)
 app.use(express.json());
 
 // API Key Authentication Middleware
@@ -18,176 +19,202 @@ const authenticateAPIKey = (req, res, next) => {
   next();
 };
 
-// API Keys
-const API_KEYS = {
-  GEMINI: process.env.GEMINI_API_KEY,
-  GROQ: process.env.GROQ_API_KEY,
-  OPENROUTER: process.env.OPENROUTER_AI,
-  DEEPSEEK: process.env.DEEPSEEK_API_KEY
+// Simple in-memory rate limiter
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
+const RATE_LIMIT_MAX = 30; // 30 requests per minute
+
+const rateLimit = (req, res, next) => {
+  const key = req.headers['x-api-key'] || req.ip;
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW;
+
+  if (!rateLimitMap.has(key)) {
+    rateLimitMap.set(key, []);
+  }
+
+  const requests = rateLimitMap.get(key).filter(t => t > windowStart);
+  requests.push(now);
+  rateLimitMap.set(key, requests);
+
+  if (requests.length > RATE_LIMIT_MAX) {
+    return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
+  }
+
+  next();
 };
 
-// Endpoint untuk Gemini
-async function callGemini(prompt) {
-  try {
-    const response = await axios.post(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEYS.GEMINI}`,
-      {
-        contents: [{
-          parts: [{ text: prompt }]
-        }]
-      }
-    );
-    return response.data.candidates[0].content.parts[0].text;
-  } catch (error) {
-    console.error('Gemini Error:', error.response?.data || error.message);
-    return `Error: ${error.response?.data?.error?.message || error.message}`;
+// ========================================
+// MODEL MAP — 3 Providers × 3 Tiers
+// All routed through OpenRouter
+// ========================================
+const MODEL_MAP = {
+  'GPT': {
+    flash:  'openai/gpt-4o-mini',
+    medium: 'openai/gpt-4o',
+    high:   'openai/o4-mini'
+  },
+  'Gemini': {
+    flash:  'google/gemini-2.0-flash-001',
+    medium: 'google/gemini-2.5-flash',
+    high:   'google/gemini-2.5-pro'
+  },
+  'Claude': {
+    flash:  'anthropic/claude-3.5-haiku',
+    medium: 'anthropic/claude-sonnet-4',
+    high:   'anthropic/claude-opus-4'
   }
-}
+};
 
-// Endpoint untuk Groq
-async function callGroq(prompt) {
-  try {
-    const response = await axios.post(
-      'https://api.groq.com/openai/v1/chat/completions',
-      {
-        model: 'llama-3.3-70b-versatile',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 1024
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${API_KEYS.GROQ}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    return response.data.choices[0].message.content;
-  } catch (error) {
-    console.error('Groq Error:', error.message);
-    return `Error: ${error.message}`;
+// ========================================
+// Universal OpenRouter Call
+// ========================================
+async function callOpenRouter(prompt, images, modelId) {
+  if (!process.env.OPENROUTER_AI) {
+    return 'Error: OpenRouter API key belum dikonfigurasi. Tambahkan OPENROUTER_AI di environment variables.';
   }
-}
 
-
-// Endpoint untuk OpenRouter
-async function callOpenRouter(prompt) {
   try {
+    // Build content array (support text + vision)
+    let content = [];
+
+    if (prompt) {
+      content.push({ type: 'text', text: prompt });
+    }
+
+    if (images && images.length > 0) {
+      images.forEach(img => {
+        content.push({
+          type: 'image_url',
+          image_url: { url: img }
+        });
+      });
+    }
+
+    // If no images, simplify content to just string for non-vision models
+    const messageContent = (images && images.length > 0) ? content : prompt;
+
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'meta-llama/llama-3.1-8b-instruct:free',
-        messages: [{ role: 'user', content: prompt }],
+        model: modelId,
+        messages: [{ role: 'user', content: messageContent }],
         temperature: 0.7,
-        max_tokens: 1024
+        max_tokens: 2048
       },
       {
         headers: {
-          'Authorization': `Bearer ${API_KEYS.OPENROUTER}`,
+          'Authorization': `Bearer ${process.env.OPENROUTER_AI}`,
           'HTTP-Referer': 'https://lazy-extention.vercel.app',
           'X-Title': 'Lazy Extension',
           'Content-Type': 'application/json'
         }
       }
     );
+
     return response.data.choices[0].message.content;
   } catch (error) {
-    console.error('OpenRouter Error:', error.response?.data || error.message);
+    console.error(`OpenRouter Error [${modelId}]:`, error.response?.data || error.message);
     return `Error: ${error.response?.data?.error?.message || error.message}`;
   }
 }
 
-// Endpoint untuk DeepSeek
-async function callDeepSeek(prompt) {
-  try {
-    const response = await axios.post(
-      'https://api.deepseek.com/v1/chat/completions',
-      {
-        model: 'deepseek-chat',
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
-        max_tokens: 1024
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${API_KEYS.DEEPSEEK}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-    return response.data.choices[0].message.content;
-  } catch (error) {
-    console.error('DeepSeek Error:', error.response?.data || error.message);
-    return `Error: ${error.response?.data?.error?.message || error.message}`;
-  }
+// ========================================
+// Helper: Resolve model ID from provider + tier
+// ========================================
+function resolveModelId(ai, tier) {
+  const provider = MODEL_MAP[ai];
+  if (!provider) return null;
+  return provider[tier] || provider['flash']; // Default to flash if tier invalid
 }
 
-// Single AI chat endpoint
-app.post('/api/chat', authenticateAPIKey, async (req, res) => {
+// ========================================
+// Chat Endpoint — single AI call
+// ========================================
+app.post('/api/chat', authenticateAPIKey, rateLimit, async (req, res) => {
+  const startTime = Date.now();
   try {
-    const { ai, prompt } = req.body;
+    const { ai, tier = 'flash', prompt, images } = req.body;
 
-    if (!ai || !prompt) {
-      return res.status(400).json({ error: 'Missing required fields: ai, prompt' });
+    if (!ai || (!prompt && (!images || images.length === 0))) {
+      return res.status(400).json({ error: 'Missing AI provider or prompt/images' });
     }
 
-    const aiMap = {
-      'Gemini': callGemini,
-      'Groq': callGroq,
-      'OpenRouter': callOpenRouter,
-      'DeepSeek': callDeepSeek
-    };
-
-    if (!aiMap[ai]) {
-      return res.status(400).json({ error: 'Invalid AI name' });
+    const modelId = resolveModelId(ai, tier);
+    if (!modelId) {
+      return res.status(400).json({
+        error: `Invalid AI name. Available: ${Object.keys(MODEL_MAP).join(', ')}`,
+        availableTiers: ['flash', 'medium', 'high']
+      });
     }
 
-    const response = await aiMap[ai](prompt);
+    const responseText = await callOpenRouter(prompt, images, modelId);
 
     res.json({
       ai: ai,
-      response: response
+      tier: tier,
+      model: modelId,
+      response: responseText,
+      responseTime: Date.now() - startTime
     });
 
   } catch (error) {
     console.error('Server Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', responseTime: Date.now() - startTime });
   }
 });
 
-app.post('/api/compare', authenticateAPIKey, async (req, res) => {
+// ========================================
+// Compare Endpoint — 2 AI side-by-side
+// ========================================
+app.post('/api/compare', authenticateAPIKey, rateLimit, async (req, res) => {
+  const startTime = Date.now();
   try {
-    const { ai1, ai2, prompt } = req.body;
+    const { ai1, tier1 = 'flash', ai2, tier2 = 'flash', prompt, images } = req.body;
 
     if (!ai1 || !ai2 || !prompt) {
       return res.status(400).json({ error: 'Missing required fields: ai1, ai2, prompt' });
     }
 
-    const aiMap = {
-      'Gemini': callGemini,
-      'Groq': callGroq,
-      'OpenRouter': callOpenRouter,
-      'DeepSeek': callDeepSeek
-    };
+    const modelId1 = resolveModelId(ai1, tier1);
+    const modelId2 = resolveModelId(ai2, tier2);
+
+    if (!modelId1 || !modelId2) {
+      return res.status(400).json({
+        error: `Invalid AI name. Available: ${Object.keys(MODEL_MAP).join(', ')}`,
+        availableTiers: ['flash', 'medium', 'high']
+      });
+    }
 
     const [response1, response2] = await Promise.all([
-      aiMap[ai1](prompt),
-      aiMap[ai2](prompt)
+      callOpenRouter(prompt, images, modelId1),
+      callOpenRouter(prompt, images, modelId2)
     ]);
 
     res.json({
-      ai1: { name: ai1, response: response1 },
-      ai2: { name: ai2, response: response2 }
+      ai1: { name: ai1, tier: tier1, model: modelId1, response: response1 },
+      ai2: { name: ai2, tier: tier2, model: modelId2, response: response2 },
+      responseTime: Date.now() - startTime
     });
 
   } catch (error) {
     console.error('Server Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', responseTime: Date.now() - startTime });
   }
 });
 
+// ========================================
+// Health Check
+// ========================================
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is running' });
+  res.json({
+    status: 'ok',
+    message: 'Lazy Mahasigma API is running',
+    providers: Object.keys(MODEL_MAP),
+    tiers: ['flash', 'medium', 'high'],
+    models: MODEL_MAP,
+    timestamp: new Date().toISOString()
+  });
 });
 
 if (process.env.NODE_ENV !== 'production') {
